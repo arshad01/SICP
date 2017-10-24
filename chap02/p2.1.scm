@@ -5,10 +5,16 @@
         (gcd b (remainder a b))))
 
 (define (make-rat n d)
-    (cond (= d 0)
+    (if (= d 0)
         (error "Denominator cannot be 0")
-        (let ((g (gcd n d)))
-            (cons (/ n g) (/ d g)))))
+        (let ((g (gcd (abs n) (abs d)))
+              (nn (abs n))
+              (dd (abs d)))
+            (if (and (< n 0) (< d 0))
+                (cons (/ nn g) (/ dd g))
+                (if (or (< n 0) (< d 0))
+                    (cons (- (/ nn g)) (/ dd g))
+                    (cons (/ n g) (/ d g)))))))
 
 (define (numer x)
         (car x))
@@ -27,4 +33,20 @@
                  (* (numer y) (denom x)))
               (* (denom x) (denom y))))
 
+(define (sub-rat x y)
+    (make-rat (- (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+
+(define (mult-rat x y)
+    (make-rat (* (numer x) (numer y))
+              (* (denom x) (denom y))))
+
+(define (div-rat x y)
+    (make-rat (* (numer x) (denom y))
+              (* (denom x) (numer y))))
+
+(define (equal-rat? x y)
+    (= (* (numer x) (denom y))
+       (* (numer y) (denom x))))
 
