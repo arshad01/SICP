@@ -23,10 +23,10 @@
         (cdr x))
 
 (define (print-rat x)
-        (newline)
         (display (numer x))
         (display "/")
-        (display (denom x)))
+        (display (denom x))
+        (newline))
 
 (define (add-rat x y)
     (make-rat (+ (* (numer x) (denom y))
