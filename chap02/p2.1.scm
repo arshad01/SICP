@@ -1,13 +1,13 @@
 ;;; Problem 2.1 - Section 2.1.1
-(define (gcd a b)
+(define (my_gcd a b)
     (if (= b 0)
         a
-        (gcd b (remainder a b))))
+        (my_gcd b (remainder a b))))
 
 (define (make-rat n d)
     (if (= d 0)
         (error "Denominator cannot be 0")
-        (let ((g (gcd (abs n) (abs d)))
+        (let ((g (my_gcd (abs n) (abs d)))
               (nn (abs n))
               (dd (abs d)))
             (if (and (< n 0) (< d 0))
@@ -23,10 +23,10 @@
         (cdr x))
 
 (define (print-rat x)
-        (newline)
         (display (numer x))
         (display "/")
-        (display (denom x)))
+        (display (denom x))
+        (newline))
 
 (define (add-rat x y)
     (make-rat (+ (* (numer x) (denom y))
@@ -38,7 +38,7 @@
                  (* (numer y) (denom x)))
               (* (denom x) (denom y))))
 
-(define (mult-rat x y)
+(define (mul-rat x y)
     (make-rat (* (numer x) (numer y))
               (* (denom x) (denom y))))
 
@@ -50,3 +50,11 @@
     (= (* (numer x) (denom y))
        (* (numer y) (denom x))))
 
+(print-rat (add-rat (make-rat 1 3) (make-rat 1 4)))
+(print-rat (sub-rat (make-rat 1 3) (make-rat 1 4)))
+(print-rat (mul-rat (make-rat 1 3) (make-rat 1 4)))
+(print-rat (div-rat (make-rat 1 3) (make-rat 1 4)))
+(display (equal-rat? (make-rat 1 3) (make-rat 1 4)))
+(newline)
+(display (equal-rat? (make-rat 1 3) (make-rat 2 6)))
+(newline)
