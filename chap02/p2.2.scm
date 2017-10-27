@@ -10,8 +10,7 @@
     (display (x-point p))
     (display ", ")
     (display (y-point p))
-    (display ")")
-    (newline))
+    (display ")"))
 
 (define (make-segment x1 y1 x2 y2) 
     (cons (make-point x1 y1) (make-point x2 y2)))
@@ -20,6 +19,11 @@
 
 (define (end-segment seg) (cdr seg))
 
+(define (print-segment seg)
+    (print-point (start-segment seg))
+    (display "----")
+    (print-point (end-segment seg))
+    (newline))
 
 (define (midpoint-segment seg)
     (make-point (/ (+ (x-point (start-segment seg)) (x-point (end-segment seg))) 2.0)
