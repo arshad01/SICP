@@ -38,7 +38,7 @@
 
 ; p2.10
 (define (zero-span? x)
-    (cond ((and (<= (lower-bound x) 0) (>= (upper-bound x) 0)) (error "Zero span"))))
+    (cond ((= 0 (+ (lower-bound x) (upper-bound x))) (error "Zero span"))))
 
 ; redefine div-interval
 (define (div-interval x y)
