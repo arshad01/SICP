@@ -51,9 +51,10 @@
 ; redefine mul-interval
 
 ; define interval class for interval <xl, xu>
+; ref: http://fab.cba.mit.edu/classes/S62.12/docs/Hickey_interval.pdf
 ; p = interval limits are positive; i.e 0 <= xl < xu
 (define (p? x)
-  (and (<= 0 (lower-bound x)) (< (lower-bound x) (upper-bound x))))
+  (and (<= 0 (lower-bound x)) (<= (lower-bound x) (upper-bound x))))
 ; n = interval limits are negartive; i.e xl <= xu <= 0
 (define (n? x)
   (and (<= (lower-bound x) (upper-bound x)) (<= (upper-bound x) 0)))
@@ -76,14 +77,33 @@
             ((and (n? x) (m? y)) (make-interval (* xl yu) (* xl yl)))
             ((and (n? x) (n? y)) (make-interval (* xu yu) (* xl yl))))))
 
+(define (make-center-width c w)
+  (make-interval (- c w) (+ c w)))
+
+(define (center i)
+  (/ (+ (lower-bound i) (upper-bound i)) 2))
+
+(define (width i)
+(/ (- (upper-bound i) (lower-bound i)) 2))
+
+; p2.12
+(define (make-center-percent c p)
+  (let ((w (* c (/ p 100))))
+    (make-interval (- c w) (+ c w))))
+
+(define (percent x)
+  (let ((c (center x))
+        (w (width x)))
+       (/ (* 100 w) c)))
+
 ; testing
 ; 6.8 (10%) in parallel with 4.7 (5%)
-;(display (invert-interval 
-;    (add-interval (invert-interval (make-interval 6.12 7.48))
-;                  (invert-interval (make-interval 4.465 4.935)))))
-
-;(invert-interval (make-interval 1 1))
-;(newline)
+(display (invert-interval 
+    (add-interval (invert-interval (make-interval 6.12 7.48))
+                  (invert-interval (make-interval 4.465 4.935)))))
+(newline)
+(display (percent (make-center-percent 3.5 15)))
+(newline)
 
 
 
