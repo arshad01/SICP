@@ -29,8 +29,8 @@
 
 ; p2.8
 (define (sub-interval x y)
-    (make-interval (- (lower-bound x) (lower-bound y))
-                   (- (upper-bound x) (upper-bound y))))
+    (make-interval (- (lower-bound x) (upper-bound y))
+                   (- (upper-bound x) (lower-bound y))))
 
 ; p2.9
 (define (interval-width x)
@@ -47,14 +47,43 @@
         (make-interval (/ 1.0 (upper-bound y))
                        (/ 1.0 (lower-bound y)))))
 
+; p2.11
+; redefine mul-interval
+
+; define interval class for interval <xl, xu>
+; p = interval limits are positive; i.e 0 <= xl < xu
+(define (p? x)
+  (and (<= 0 (lower-bound x)) (< (lower-bound x) (upper-bound x))))
+; n = interval limits are negartive; i.e xl <= xu <= 0
+(define (n? x)
+  (and (<= (lower-bound x) (upper-bound x)) (<= (upper-bound x) 0)))
+; m = interval is mixed; i.e xl < 0 < xu
+(define (m? x)
+  (and (< (lower-bound x) 0) (< 0 (upper-bound x))))
+
+(define (mul-interval x y)
+    (let ((xl (lower-bound x))
+          (xu (upper-bound x))
+          (yl (lower-bound y))
+          (yu (upper-bound y)))
+      (cond ((and (p? x) (p? y)) (make-interval (* xl yl) (* xu yu)))
+            ((and (p? x) (m? y)) (make-interval (* xu yl) (* xu yu)))
+            ((and (p? x) (n? y)) (make-interval (* xu yl) (* xl yu)))
+            ((and (m? x) (p? y)) (make-interval (* xl yu) (* xu yu)))
+            ((and (m? x) (m? y)) (make-interval (min (* xl yu) (* xu yl)) (max (* xl yl) (* xu yu))))
+            ((and (m? x) (n? y)) (make-interval (* xu yl) (* xl yl)))
+            ((and (n? x) (p? y)) (make-interval (* xl yu) (* xu yl)))
+            ((and (n? x) (m? y)) (make-interval (* xl yu) (* xl yl)))
+            ((and (n? x) (n? y)) (make-interval (* xu yu) (* xl yl))))))
+
 ; testing
 ; 6.8 (10%) in parallel with 4.7 (5%)
-(display (invert-interval 
-    (add-interval (invert-interval (make-interval 6.12 7.48))
-                  (invert-interval (make-interval 4.465 4.935)))))
+;(display (invert-interval 
+;    (add-interval (invert-interval (make-interval 6.12 7.48))
+;                  (invert-interval (make-interval 4.465 4.935)))))
 
-(invert-interval (make-interval 1 1))
-(newline)
+;(invert-interval (make-interval 1 1))
+;(newline)
 
 
 
