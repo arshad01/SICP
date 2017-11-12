@@ -96,14 +96,34 @@
         (w (width x)))
        (/ (* 100 w) c)))
 
+; p2.13
+; let X = [(a - (a*x)/100), (a + (a*x)/100)]
+;     Y = [(b - (b*y)/100), (b + (b*y)/100)]
+; X * Y = [(a - (a*x)/100), (a + (a*x)/100)] * [(b - (b*y)/100), (b + (b*y)/100)]
+;       = [(a*b - a*b*x/100 - a*b*y/100 + a*b*x*y/100), (a*b + a*b*x/100 + a*b*y/100 + a*b*x*y/100)]
+; ignoring factors with x*y
+;       = [(a*b - a*b*x/100 - a*b*y/100), (a*b + a*b*x/100 + a*b*y/100)]
+;       = [a*b - a*b(x/100 + y/100), a*b + a*b(x/100 + y/100)]
+; For small tolerances (e.g.<= 10%), the tolerance of product is (x + y)%
+
+(display "interval=[6+-2%]*[5+-4%]")
+(newline)
+(display "tolerance actual (%)  = ")
+(display (percent (mul-interval (make-center-percent 6.0 2) (make-center-percent 5 4))))
+(newline)
+(display "tolerance estimate (%)= ")
+(display (+ 2 4))
+(newline)
+
+
 ; testing
 ; 6.8 (10%) in parallel with 4.7 (5%)
-(display (invert-interval 
-    (add-interval (invert-interval (make-interval 6.12 7.48))
-                  (invert-interval (make-interval 4.465 4.935)))))
-(newline)
-(display (percent (make-center-percent 3.5 15)))
-(newline)
+;(display (invert-interval 
+;    (add-interval (invert-interval (make-interval 6.12 7.48))
+;                  (invert-interval (make-interval 4.465 4.935)))))
+;(newline)
+;(display (percent (make-center-percent 3.5 15)))
+;(newline)
 
 
 
