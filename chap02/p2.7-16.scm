@@ -116,6 +116,33 @@
 (newline)
 
 
+; p2.14
+(define (par1 r1 r2)
+  (div-interval (mul-interval r1 r2)
+                (add-interval r1 r2)))
+
+(define (par2 r1 r2)
+  (let ((one (make-interval 1 1)))
+    (div-interval one
+        (add-interval (div-interval one r1)
+                      (div-interval one r2)))))
+
+(display "percent par1=")
+(display (percent (par1 (make-center-percent 6 2) (make-center-percent 7 1))))
+(newline)
+(display "percent par2=")
+(display (percent (par2 (make-center-percent 6 2) (make-center-percent 7 1))))
+(newline)
+
+; p2.15
+; par2 is better because of less rounding error in the floating point values
+; par1 multiplies small values which result in further smaller value and
+; may result in value underflow.
+
+; p2.16
+; Use integer based system. Convert all percentages to inetger to get rid of the decimal
+
+
 ; testing
 ; 6.8 (10%) in parallel with 4.7 (5%)
 ;(display (invert-interval 
