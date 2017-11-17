@@ -1,33 +1,30 @@
 ; p2.27
 (define nil (list))
 
-(define (reverse-1 l)
+(define (reverse-2 l)
     (define (reverse-i l acc)
-        (if (null? l) 
-              acc
-              (reverse-i (cdr l) (cons (car l) acc))))
-    (reverse-i l (list)))
+        (cond ((null? l) acc)
+              ((pair? (car l)) (reverse-i (cdr l) (cons (reverse-i (car l) nil) acc)))
+              (else (reverse-i (cdr l) (cons (car l) acc)))))
+    (reverse-i l nil))
 
-(define (deep-reverse l)
-    (cond ((null? l) l)
-          ((pair? (car l)) (cons (deep-reverse (car l)) (deep-reverse (cdr l))))
-          (else (cons reverse-1 l))))
-
-(define l1 (list (list 1 2 3) (list 4 5 6)))
+(define l1 (list 1 2 3 4 5 6))
 (define l2 (list 1 (list 2 3 4) 5 6 (list 7 8) 9))
 (define l3 (list (list (list (list 1 2 3))) (list 4 5)))
+(define l4 (list 1 2 3 4 (list 5 6)))
+(define l5 (list (list 1 2 3) (list 4 5 6)))
 
-(display l1)
-(display " -----> ")
-(display (deep-reverse l1))
-(newline)
 
-(display l2)
-(display " -----> ")
-(display (deep-reverse l2))
-(newline)
+(define (reverse-2-test lists)
+    (if (null? lists)
+        (newline)
+        (let ()
+            (display (car lists))
+            (display " ------> ")
+            (display (reverse-2 (car lists)))
+            (newline)
+            (reverse-2-test (cdr lists)))))
 
-(display l3)
-(display " -----> ")
-(display (deep-reverse l3))
-(newline)
+(reverse-2-test (list l1 l2 l3 l4 l5))
+
+
