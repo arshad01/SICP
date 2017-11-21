@@ -15,6 +15,7 @@
 (define (branch-length branch)
     (car branch))
 
+; check of branch is a list or just an atom
 (define (branch-structure branch)
     (if (pair? branch)
         (car (cdr branch))
@@ -44,10 +45,25 @@
               (else (+ (total-weight-i (branch-structure (left-branch mobile)) acc) (total-weight-i (branch-structure (right-branch mobile)) acc)))))
     (total-weight-i mobile 0))
 
+; (c)
+(define (torque branch)
+  (* (branch-length branch) (total-weight (branch-structure branch))))
+
+(define (balanced? mobile)
+  (define (balanced-i mobile flag)
+    (cond ((or (null? mobile) (not (pair? mobile))) flag)
+          ((not (mobile? (branch-structure (left-branch mobile))))  (= (torque (left-branch mobile)) (torque (right-branch mobile))))
+          ((not (mobile? (branch-structure (right-branch mobile))))  (= (torque (right-branch mobile)) (torque (left-branch mobile))))
+          (else (and (balanced-i (branch-structure (left-branch mobile)) flag) (balanced-i (branch-structure (right-branch mobile)) flag)))))
+  (balanced-i mobile #f))
+
+; Testing data
 (define m1 (make-mobile (make-branch 1 2) (make-branch 3 (make-mobile (make-branch 4 5) (make-branch 6 7)))))
 (define m2 (make-mobile (make-branch 1 2) (make-branch 3 4)))
 (define m3 (make-mobile (make-branch 1 (make-mobile (make-branch 8 9) (make-branch 10 11))) (make-branch 3 (make-mobile (make-branch 4 5) (make-branch 6 7)))))
 (define m4 (make-mobile (make-branch 2 (make-mobile (make-branch 1 3) (make-branch 3 1))) (make-branch 2 (make-mobile (make-branch 2 2) (make-branch 1 2)))))
+(define m5 (make-mobile (make-branch 2 (make-mobile (make-branch 1 2) (make-branch 1 2))) (make-branch 2 (make-mobile (make-branch 1 2) (make-branch 1 2)))))
+(define m6 (make-mobile (make-branch 1 2) (make-branch 1 2)))
 
 ; generic tester and printer
 (define (fn-test fn lists)
@@ -60,12 +76,26 @@
             (newline)
             (fn-test fn (cdr lists)))))
 
-(fn-test total-weight (list m1 m2 m3))
+(display "Testing total-weight 1")
+(newline)
+(fn-test total-weight (list m1 m2 m3 m4 m5 m6))
 
-; (c)
-; my not be correct
-(define (balanced? mobile)
-  (= (* (branch-length (left-branch mobile)) (total-weight (branch-structure (left-branch mobile))))
-     (* (branch-length (right-branch mobile)) (total-weight (branch-structure (right-branch mobile))))))
+(display "Testing balanced? 1")
+(newline)
+(fn-test balanced? (list m1 m2 m3 m4 m5 m6))
 
-(fn-test balanced? (list m1 m2 m3 m4))
+; (d)
+; No change in any other part of program is required
+(define (make-mobile left right)
+  (cons left right))
+
+(define (make-branch length structure)
+  (cons length structure))
+
+(display "Testing total-weight 2")
+(newline)
+(fn-test total-weight (list m1 m2 m3 m4 m5 m6))
+
+(display "Testing balanced? 2")
+(newline)
+(fn-test balanced? (list m1 m2 m3 m4 m5 m6))
