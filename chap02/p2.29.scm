@@ -40,9 +40,12 @@
     (define (total-weight-i mobile acc)
         (cond ((null? mobile) acc)
               ((not (pair? mobile)) (+ mobile acc))
-              ((not (mobile? (branch-structure (left-branch mobile)))) (+ (branch-structure (left-branch mobile)) (total-weight-i (branch-structure (right-branch mobile)) acc)))
-              ((not (mobile? (branch-structure (right-branch mobile)))) (+ (total-weight-i (branch-structure (left-branch mobile)) acc) (branch-structure (right-branch mobile))))
-              (else (+ (total-weight-i (branch-structure (left-branch mobile)) acc) (total-weight-i (branch-structure (right-branch mobile)) acc)))))
+              ((not (mobile? (branch-structure (left-branch mobile)))) (+ (branch-structure (left-branch mobile)) 
+                                                                          (total-weight-i (branch-structure (right-branch mobile)) acc)))
+              ((not (mobile? (branch-structure (right-branch mobile)))) (+ (total-weight-i (branch-structure (left-branch mobile)) acc) 
+                                                                           (branch-structure (right-branch mobile))))
+              (else (+ (total-weight-i (branch-structure (left-branch mobile)) acc) 
+                       (total-weight-i (branch-structure (right-branch mobile)) acc)))))
     (total-weight-i mobile 0))
 
 ; (c)
@@ -54,7 +57,8 @@
     (cond ((or (null? mobile) (not (pair? mobile))) flag)
           ((not (mobile? (branch-structure (left-branch mobile))))  (= (torque (left-branch mobile)) (torque (right-branch mobile))))
           ((not (mobile? (branch-structure (right-branch mobile))))  (= (torque (right-branch mobile)) (torque (left-branch mobile))))
-          (else (and (balanced-i (branch-structure (left-branch mobile)) flag) (balanced-i (branch-structure (right-branch mobile)) flag)))))
+          (else (and (balanced-i (branch-structure (left-branch mobile)) flag) 
+                     (balanced-i (branch-structure (right-branch mobile)) flag)))))
   (balanced-i mobile #f))
 
 ; Testing data
